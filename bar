@@ -1,0 +1,21 @@
+#! /bin/sh
+
+delimitor="|"
+
+status() { \
+	echo " "
+	ip a | grep -i enp3s0$ | grep -o "[0-9].*[0-9]/" | sed 's/.$//' &&
+	echo "$delimitor " &&
+	df -h | grep -i 200G | grep -o "[0-9][0-9]%" &&  
+	echo "$delimitor " &&
+	free --mebi | sed -n '2{p;q}' | awk '{printf ("%2.2fGiB/%2.2fGiB\n", ( $3 / 1024), ($2 / 1024))}' &&²
+	echo "$delimitor " &&	
+	amixer get Master | grep Left | grep -o "[0-9]*%" &&
+	echo "$delimitor" &&	
+	date +"%A %e %B %H:%M" 
+}
+
+while true; do
+    xsetroot -name "$(status | tr '\n' ' ')"
+	sleep 30
+done
