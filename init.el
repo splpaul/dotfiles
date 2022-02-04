@@ -1,17 +1,5 @@
-;; Ocaml stuff
-(let ((opam-share (ignore-errors (car (process-lines "opam" "config" "var" "share")))))
-      (when (and opam-share (file-directory-p opam-share))
-       ;; Register Merlin
-       (add-to-list 'load-path (expand-file-name "emacs/site-lisp" opam-share))
-       (autoload 'merlin-mode "merlin" nil t nil)
-       ;; Automatically start it in OCaml buffers
-       (add-hook 'tuareg-mode-hook 'merlin-mode t)
-       (add-hook 'caml-mode-hook 'merlin-mode t)
-       ;; Use opam switch to lookup ocamlmerlin binary
-       (setq merlin-command 'opam)))
-
 ;; UI tweaks
-(setq inhibit-startup-message t)
+(setq inhibit-startup-message nil)
 
 (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
@@ -20,10 +8,12 @@
 
 (menu-bar-mode -1)            ; Disable the menu bar
 
-;; Set up the visible bell
-;(setq visible-bell t)
+;; Startup page
+(require 'dashboard)
+(dashboard-setup-startup-hook)
+(setq dashboard-startup-banner "/home/paul/pictures/emacs_600x400.png")
 
-;; Better scrolling, shamelessely stolen from  system crafters
+;; Better scrolling from system crafters config
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
 (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
@@ -41,15 +31,58 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;; God mode => Commands without pressing ctrl
+(require 'god-mode)
+(global-set-key (kbd "<print>") #'god-local-mode)
+
 ;; -------KEYBINDS-----------
-(global-set-key (kbd "C-e") 'split-window-right)
-(global-set-key (kbd "C-s") 'split-window-below)
+
+(define-prefix-command 'ring-map)
+(global-set-key (kbd "C-x") 'ring-map)
+
+(global-set-key (kbd "C-z") 'previous-line)
+(global-set-key (kbd "C-q") 'backward-word)
+(global-set-key (kbd "C-s") 'next-line)
+(global-set-key (kbd "C-d") 'forward-word)
+(global-set-key (kbd "C-M-d") 'forward-sexp)
+(global-set-key (kbd "C-M-q") 'backward-sexp)
+(global-set-key (kbd "C-a") 'beginning-of-line)
+(global-set-key (kbd "C-e") 'end-of-line)
+
+(global-set-key (kbd "C-x C-d") 'split-window-right)
+(global-set-key (kbd "C-x C-s") 'split-window-below)
+(global-set-key (kbd "C-x C-w") 'delete-window)
+;; Resize windows
+(global-set-key (kbd "C-x C-z") 'enlarge-window-horizontally)
+(global-set-key (kbd "C-x C-q") 'shrink-window-horizontally)
+(global-set-key (kbd "C-x C-e") 'enlarge-window)
+;; Navigate windows
 (global-set-key (kbd "C-r") 'other-window)
-(global-set-key (kbd "C-a") 'delete-window)
-(global-set-key (kbd "C-z") 'enlarge-window)
-(global-set-key (kbd "C-d") 'enlarge-window-horizontally)
-(global-set-key (kbd "C-q") 'shrink-window-horizontally)
-(global-set-key (kbd "C-<") 'kill-whole-line)
+
+(global-set-key (kbd "C-c c") 'comment-region)
+(global-set-key (kbd "C-w") 'kill-whole-line)
+
+(global-set-key (kbd "C-x s") 'save-buffer)
+(global-set-key (kbd "C-c C-e") 'eval-buffer)
+
+(require 'dired)
+(global-set-key (kbd "C-x C-f") 'dired)
+(global-set-key (kbd "C-x C-g") 'dired-jump) ;; Open directory in full buffer with dired
+;; Use zqsd to navigate through files in dired
+(define-key dired-mode-map "z" 'previous-line)
+(define-key dired-mode-map "q" 'dired-up-directory)
+(define-key dired-mode-map "s" 'next-line)
+(define-key dired-mode-map "d" 'dired-find-file)
+
+(global-set-key (kbd "C-b") 'persp-switch-to-buffer)
+(global-set-key (kbd "M-b") 'persp-remove-buffer)
+
+(global-set-key (kbd "C-²") 'centaur-tabs-forward)
+
+;; Perspective.el
+(use-package perspective
+  :config
+  (persp-mode))
 
 ;; Help me remember my keybinds
 (use-package which-key
@@ -63,6 +96,7 @@
   :init
   (vertico-mode))
 
+;; Match without character order
 (use-package orderless
   :init
   (setq completion-styles '(orderless)
@@ -113,19 +147,13 @@
 ;; Disable tabs in dired mode
 (add-hook 'dired-mode-hook 'centaur-tabs-local-mode)
 
-(global-set-key (kbd "C-²") 'centaur-tabs-forward)
-
-;; Highlight matching {} () ..
+;; Highlight matching parentheses
 (use-package paren
   :config
   (set-face-attribute 'show-paren-match-expression nil :background "#363e4a")
   (show-paren-mode 1))
 
 ;;;;; EDITOR CONFIG ;;;;;;
-
-;; God mode
-(require 'god-mode)
-(global-set-key (kbd "<print>") #'god-local-mode)
 
 ;; Indent stuff
 (setq-default indent-tabs-mode nil) ;; Indent with spaces
@@ -137,8 +165,9 @@
   :commands lsp
   :hook ((c-mode java-mode ocaml-mode) . lsp)
   :bind (:map lsp-mode-map
-         ("\M-TAB" . completion-at-point))
+         ("M-TAB" . completion-at-point))
   :custom (lsp-headerline-breadcrumb-enable nil))
+(use-package lsp-ui)
 
 ;; Check for errors on the fly
 (use-package flycheck :ensure t :init (global-flycheck-mode))
@@ -156,11 +185,9 @@
 ;; Makes company show a little documentation popup
 (company-quickhelp-mode)
 
-(use-package lsp-ui)
-
-(use-package dap-mode
-  :after lsp-mode
-  :config (dap-auto-configure-mode))
+;; (use-package dap-mode
+;;   :after lsp-mode
+;;   :config (dap-auto-configure-mode))
 
 ;; C / C++
 (use-package ccls
@@ -188,6 +215,21 @@
 (setq meghanada-java-path "java")
 (setq meghanada-maven-path "mvn")
 
+;; Ocaml stuff
+(let ((opam-share (ignore-errors (car (process-lines "opam" "config" "var" "share")))))
+      (when (and opam-share (file-directory-p opam-share))
+
+        ;; Register Merlin
+       (add-to-list 'load-path (expand-file-name "emacs/site-lisp" opam-share))
+       (autoload 'merlin-mode "merlin" nil t nil)
+
+       ;; Automatically start Merlin in OCaml buffers
+       (add-hook 'tuareg-mode-hook 'merlin-mode t)
+       (add-hook 'caml-mode-hook 'merlin-mode t)
+
+       ;; Use opam switch to lookup ocamlmerlin binary
+       (setq merlin-command 'opam)))
+
 ;; Color related parentheses
 (use-package smartparens
   :hook (prog-mode . smartparens-mode))
@@ -210,9 +252,6 @@
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
-;; PDFs in emacs
-(pdf-tools-install)
-
 ;; Show everyone on discord you're part of the church of emacs
 (use-package elcord
   :custom
@@ -220,6 +259,7 @@
   :config
   (elcord-mode))
 
+;; Move region/current line up and down
 (defun move-text-internal (arg)
   (cond
    ((and mark-active transient-mark-mode)
@@ -244,12 +284,12 @@
       (move-to-column column t)))))
 
 (defun move-text-down (arg)
-  "Move region (transient-mark-mode active) or current line arg lines down."
+  "Move region (transient-mark-mode active) or current line ARG lines down."
   (interactive "*p")
   (move-text-internal arg))
 
 (defun move-text-up (arg)
-  "Move region (transient-mark-mode active) or current line arg lines up."
+  "Move region (transient-mark-mode active) or current line ARG lines up."
   (interactive "*p")
   (move-text-internal (- arg)))
 
@@ -257,6 +297,7 @@
 
 (global-set-key [M-up] 'move-text-up)
 (global-set-key [M-down] 'move-text-down)
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -266,12 +307,13 @@
  '(bui-indent 4)
  '(custom-buffer-indent 4)
  '(custom-safe-themes
-   '("234dbb732ef054b109a9e5ee5b499632c63cc24f7c2383a849815dacc1727cb6" "d47f868fd34613bd1fc11721fe055f26fd163426a299d45ce69bef1f109e1e71" "47db50ff66e35d3a440485357fb6acb767c100e135ccdf459060407f8baea7b2" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" "0d01e1e300fcafa34ba35d5cf0a21b3b23bc4053d388e352ae6a901994597ab1" "23c806e34594a583ea5bbf5adf9a964afe4f28b4467d28777bcba0d35aa0872e" "a9a67b318b7417adbedaab02f05fa679973e9718d9d26075c6235b1f0db703c8" "1704976a1797342a1b4ea7a75bdbb3be1569f4619134341bd5a4c1cfb16abad4" default))
+   '("7d33d24f8a074ca3215dc87004c0752dab6e86f18ed8451b63bf67c2d488b461" "234dbb732ef054b109a9e5ee5b499632c63cc24f7c2383a849815dacc1727cb6" "d47f868fd34613bd1fc11721fe055f26fd163426a299d45ce69bef1f109e1e71" "47db50ff66e35d3a440485357fb6acb767c100e135ccdf459060407f8baea7b2" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" "0d01e1e300fcafa34ba35d5cf0a21b3b23bc4053d388e352ae6a901994597ab1" "23c806e34594a583ea5bbf5adf9a964afe4f28b4467d28777bcba0d35aa0872e" "a9a67b318b7417adbedaab02f05fa679973e9718d9d26075c6235b1f0db703c8" "1704976a1797342a1b4ea7a75bdbb3be1569f4619134341bd5a4c1cfb16abad4" default))
  '(dap-mode t nil (dap-mode))
+ '(god-mode-alist '((nil . "C-") ("m" . "M-") ("G" . "C-M-")))
  '(indent-tabs-mode nil)
  '(mpc-songs-format "%-5{Time} %25{Title} %20{Album} %20{Artist}")
  '(package-selected-packages
-   '(haskell-mode pdf-tools emms dap-java god-mode helm-company speed-type meghanada vimish-fold lsp-javacomp lsp-java perspective doom-themes which-key use-package)))
+   '(merlin tuareg dashboard exwm pair-tree autothemer haskell-mode emms dap-java god-mode helm-company speed-type meghanada vimish-fold lsp-javacomp lsp-java perspective doom-themes which-key use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
