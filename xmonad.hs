@@ -56,7 +56,7 @@ myFocusedBorderColor = "#B877DB"
 myFont :: String
 myFont = "xft:Hack Nerd Font Mono:regular:size=11"
 
-myBorderWidth = 2
+myBorderWidth = 1
 
 myTerminal = "alacritty"
 myBrowser = "/usr/lib/chromium/./chrome"
@@ -94,6 +94,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_f    ), spawn "rofi -show filebrowser")
 
     , ((modm .|. shiftMask, xK_d    ), spawn "Discord")
+
+    , ((modm,               xK_Print), spawn "emacs")
 
     -- close focused window
     , ((modm .|. shiftMask, xK_a     ), kill)
