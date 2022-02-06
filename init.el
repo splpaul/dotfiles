@@ -1,3 +1,14 @@
+;; Initialize package sources
+(require 'package)
+
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("melpa-stable" . "https://stable.melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
+(package-initialize)
+(require 'use-package)
+(setq use-package-always-ensure t)
+
 ;; UI tweaks
 (setq inhibit-startup-message nil)
 
@@ -5,8 +16,13 @@
 (tool-bar-mode -1)          ; Disable the toolbar
 (tooltip-mode -1)           ; Disable tooltips
 (set-fringe-mode 10)        ; Give some breathing room
+(column-number-mode 1)      ; Show column number
+;; (global-display-line-numbers-mode) ; Show line number on the left
 
 (menu-bar-mode -1)            ; Disable the menu bar
+
+;; Change all "Yes/No" to "Y/N"
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Startup page
 (require 'dashboard)
@@ -19,17 +35,6 @@
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 (setq scroll-step 1) ;; keyboard scroll one line at a time
 (setq use-dialog-box nil)
-
-;; Initialize package sources
-(require 'package)
-
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("melpa-stable" . "https://stable.melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
-(package-initialize)
-(require 'use-package)
-(setq use-package-always-ensure t)
 
 ;; God mode => Commands without pressing ctrl
 (require 'god-mode)
@@ -59,9 +64,18 @@
 ;; Navigate windows
 (global-set-key (kbd "C-r") 'other-window)
 
+(global-set-key (kbd "C-c l") 'display-line-numbers-mode)
+
+(global-set-key (kbd "C-c d") 'crux-duplicate-current-line-or-region)
+(global-set-key (kbd "C-c M-d") 'crux-duplicate-and-comment-current-line-or-region)
 (global-set-key (kbd "C-c c") 'comment-region)
+
+(global-set-key (kbd "C-<return>") 'crux-smart-open-line)
+(global-set-key (kbd "C-S-<return>") 'crux-smart-open-line-above)
 (global-set-key (kbd "C-w") 'kill-whole-line)
 
+(global-set-key (kbd "C-c ,") 'find-function-at-point)
+(global-set-key (kbd "C-c s") 'isearch-forward)
 (global-set-key (kbd "C-x s") 'save-buffer)
 (global-set-key (kbd "C-c C-e") 'eval-buffer)
 
@@ -76,8 +90,10 @@
 
 (global-set-key (kbd "C-b") 'persp-switch-to-buffer)
 (global-set-key (kbd "M-b") 'persp-remove-buffer)
-
 (global-set-key (kbd "C-²") 'centaur-tabs-forward)
+
+(require 'vterm)
+(define-key vterm-mode-map (kbd "C-r") 'other-window)
 
 ;; Perspective.el
 (use-package perspective
@@ -155,6 +171,10 @@
 
 ;;;;; EDITOR CONFIG ;;;;;;
 
+;; Drag stuff
+(drag-stuff-global-mode 1)
+(drag-stuff-define-keys)
+
 ;; Indent stuff
 (setq-default indent-tabs-mode nil) ;; Indent with spaces
 (setq-default tab-width 4)
@@ -215,6 +235,13 @@
 (setq meghanada-java-path "java")
 (setq meghanada-maven-path "mvn")
 
+(defun compile-and-run-test-java ()
+  "Compile and run a file named 'Test'."
+  (interactive)
+  (shell-command "javac *.java && java Test"))
+
+(define-key java-mode-map (kbd "C-c c t") 'compile-and-run-test-java)
+
 ;; Ocaml stuff
 (let ((opam-share (ignore-errors (car (process-lines "opam" "config" "var" "share")))))
       (when (and opam-share (file-directory-p opam-share))
@@ -259,61 +286,22 @@
   :config
   (elcord-mode))
 
-;; Move region/current line up and down
-(defun move-text-internal (arg)
-  (cond
-   ((and mark-active transient-mark-mode)
-    (if (> (point) (mark))
-        (exchange-point-and-mark))
-    (let ((column (current-column))
-          (text (delete-and-extract-region (point) (mark))))
-      (forward-line arg)
-      (move-to-column column t)
-      (set-mark (point))
-      (insert text)
-      (exchange-point-and-mark)
-      (setq deactivate-mark nil)))
-   (t
-    (let ((column (current-column)))
-      (beginning-of-line)
-      (when (or (> arg 0) (not (bobp)))
-        (forward-line)
-        (when (or (< arg 0) (not (eobp)))
-          (transpose-lines arg))
-        (forward-line -1))
-      (move-to-column column t)))))
-
-(defun move-text-down (arg)
-  "Move region (transient-mark-mode active) or current line ARG lines down."
-  (interactive "*p")
-  (move-text-internal arg))
-
-(defun move-text-up (arg)
-  "Move region (transient-mark-mode active) or current line ARG lines up."
-  (interactive "*p")
-  (move-text-internal (- arg)))
-
-(provide 'move-text)
-
-(global-set-key [M-up] 'move-text-up)
-(global-set-key [M-down] 'move-text-down)
-
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(bui-indent 4)
+ '(company-meghanada-insert-args t)
  '(custom-buffer-indent 4)
  '(custom-safe-themes
-   '("7d33d24f8a074ca3215dc87004c0752dab6e86f18ed8451b63bf67c2d488b461" "234dbb732ef054b109a9e5ee5b499632c63cc24f7c2383a849815dacc1727cb6" "d47f868fd34613bd1fc11721fe055f26fd163426a299d45ce69bef1f109e1e71" "47db50ff66e35d3a440485357fb6acb767c100e135ccdf459060407f8baea7b2" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" "0d01e1e300fcafa34ba35d5cf0a21b3b23bc4053d388e352ae6a901994597ab1" "23c806e34594a583ea5bbf5adf9a964afe4f28b4467d28777bcba0d35aa0872e" "a9a67b318b7417adbedaab02f05fa679973e9718d9d26075c6235b1f0db703c8" "1704976a1797342a1b4ea7a75bdbb3be1569f4619134341bd5a4c1cfb16abad4" default))
+   '("11cc65061e0a5410d6489af42f1d0f0478dbd181a9660f81a692ddc5f948bf34" "6128465c3d56c2630732d98a3d1c2438c76a2f296f3c795ebda534d62bb8a0e3" "3c7a784b90f7abebb213869a21e84da462c26a1fda7e5bd0ffebf6ba12dbd041" "e266d44fa3b75406394b979a3addc9b7f202348099cfde69e74ee6432f781336" "d9a28a009cda74d1d53b1fbd050f31af7a1a105aa2d53738e9aa2515908cac4c" "1d44ec8ec6ec6e6be32f2f73edf398620bb721afeed50f75df6b12ccff0fbb15" "7d33d24f8a074ca3215dc87004c0752dab6e86f18ed8451b63bf67c2d488b461" "234dbb732ef054b109a9e5ee5b499632c63cc24f7c2383a849815dacc1727cb6" "d47f868fd34613bd1fc11721fe055f26fd163426a299d45ce69bef1f109e1e71" "47db50ff66e35d3a440485357fb6acb767c100e135ccdf459060407f8baea7b2" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" "0d01e1e300fcafa34ba35d5cf0a21b3b23bc4053d388e352ae6a901994597ab1" "23c806e34594a583ea5bbf5adf9a964afe4f28b4467d28777bcba0d35aa0872e" "a9a67b318b7417adbedaab02f05fa679973e9718d9d26075c6235b1f0db703c8" "1704976a1797342a1b4ea7a75bdbb3be1569f4619134341bd5a4c1cfb16abad4" default))
  '(dap-mode t nil (dap-mode))
  '(god-mode-alist '((nil . "C-") ("m" . "M-") ("G" . "C-M-")))
  '(indent-tabs-mode nil)
  '(mpc-songs-format "%-5{Time} %25{Title} %20{Album} %20{Artist}")
  '(package-selected-packages
-   '(merlin tuareg dashboard exwm pair-tree autothemer haskell-mode emms dap-java god-mode helm-company speed-type meghanada vimish-fold lsp-javacomp lsp-java perspective doom-themes which-key use-package)))
+   '(kaolin-themes crux drag-stuff vterm merlin tuareg dashboard exwm pair-tree autothemer haskell-mode emms dap-java god-mode helm-company speed-type meghanada vimish-fold lsp-javacomp lsp-java perspective doom-themes which-key use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
