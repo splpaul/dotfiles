@@ -59,7 +59,7 @@ myFont = "xft:Hack Nerd Font Mono:regular:size=11"
 myBorderWidth = 1
 
 myTerminal = "alacritty"
-myBrowser = "/usr/lib/chromium/./chrome"
+myBrowser = "chromium"
 -- myLauncher = "dmenu_run -fn 'Hack Nerd Font Mono' -nb '#292d3e' -nf '#cccccc' -sb '#c792ea'"
 myLauncher = "rofi -show drun"
 
@@ -89,11 +89,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch dmenu
     , ((modm,               xK_d     ), spawn myLauncher)
 
-    , ((modm .|. shiftMask, xK_c    ), spawn "/usr/lib/chromium/./chrome")
+    , ((modm .|. shiftMask, xK_c    ), spawn "chromium")
 
     , ((modm,               xK_f    ), spawn "rofi -show filebrowser")
 
-    , ((modm .|. shiftMask, xK_d    ), spawn "Discord")
+    , ((modm .|. shiftMask, xK_d    ), spawn "discord")
 
     , ((modm,               xK_Print), spawn "emacs")
 
@@ -200,7 +200,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
 
     -- Restart xmonad
-    , ((modm .|. shiftMask, xK_r     ), spawn "~/.cabal/bin/./xmonad --recompile; ~/.cabal/bin/./xmonad --restart")
+    , ((modm .|. shiftMask, xK_r     ), spawn "xmonad --recompile; xmonad --restart")
 
     ]
     ++
@@ -336,8 +336,8 @@ myPP = def { ppCurrent = xmobarFont 3 . xmobarColor "#c792ea" "" . wrap "[""]"
            , ppLayout = xmobarColor "#89DDFF" "" . wrap "<" ">"
            }
 
-mySBL = statusBarProp "xmobar --screen 0" $ (pure myPP)
-mySBR = statusBarProp "xmobar --screen 1" $ (pure myPP)
+mySBL = statusBarProp "dbus-launch xmobar --screen 0" $ (pure myPP)
+mySBR = statusBarProp "dbus-launch xmobar --screen 1" $ (pure myPP)
 
 mySort = getSortByXineramaRule
 

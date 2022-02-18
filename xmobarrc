@@ -5,7 +5,7 @@ Config {
    , additionalFonts = ["xft:Font Awesome 5 Free,Font Awesome 5 Free Solid:size=12"
                         ,"xft:Hack Nerd Font Mono:size=17:regular:antialias=true"
                         ,"xft:Hack Nerd Font Mono:size=13:regular:antialias=true"]  
-   , bgColor =      "#292d3e"
+   , bgColor =      "#1E1E2E"
    , fgColor =      "#ffffff"
    , position =     Top
    , border =       NoBorder
@@ -14,7 +14,7 @@ Config {
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = " %XMonadLog% }{ <fn=2></fn> %uname% | %dynnetwork% | %disku% | %multicpu% | %memory% |  %volume% | %date%"
+   , template = " %XMonadLog% }{ <fn=2></fn> %uname% | %dynnetwork% | %disku% | %multicpu% | %memory% |  %volume% | %date%"
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -43,9 +43,9 @@ Config {
         [ Run DynNetwork     [ "--template" , " <rx>  <tx>"
                              , "--Low"      , "1000"       -- units: B/s
                              , "--High"     , "5000"       -- units: B/s
-                             , "--low"      , "#C3E872"
-                             , "--normal"   , "#82AAFF"
-                             , "--high"     , "#C792EA"
+                             , "--low"      , "#96CDFB"
+                             , "--normal"   , "#FAE3B0"
+                             , "--high"     , "#DDB6F2"
                              , "--suffix"   , "True"
                              ] 10
 
@@ -56,18 +56,18 @@ Config {
         , Run MultiCpu       [ "--template" , "<fn=2></fn> <autototal>%"
                              , "--Low"      , "30"         -- units: %
                              , "--High"     , "60"         -- units: %
-                             , "--low"      , "#C3E872"
-                             , "--normal"   , "#82AAFF"
-                             , "--high"     , "#C792EA"
+                             , "--low"      , "#96CDFB"
+                             , "--normal"   , "#FAE3B0"
+                             , "--high"     , "#DDB6F2"
                              ] 10
                          
         -- Memory usage monitor
         , Run Memory         [ "--template" ,"<fn=1></fn> <used> / <total> GiB"
                              , "--Low"      , "20"        -- units: %
                              , "--High"     , "90"        -- units: %
-                             , "--low"      , "#C3E872"
-                             , "--normal"   , "#82AAFF"
-                             , "--high"     , "#C792EA"
+                             , "--low"      , "#96CDFB"
+                             , "--normal"   , "#FAE3B0"
+                             , "--high"     , "#DDB6F2"
                              ] 10
 
         -- Time and date indicator 
