@@ -6,6 +6,7 @@
 ;;; Code:
 (define-prefix-command 'ring-map)
 (global-set-key (kbd "C-x") 'ring-map)
+(global-set-key (kbd "C-c") 'ring-map)
 
 (global-set-key (kbd "C-z") 'previous-line)
 (global-set-key (kbd "C-q") 'backward-word)
@@ -16,6 +17,7 @@
 (global-set-key (kbd "C-a") 'beginning-of-line)
 (global-set-key (kbd "C-e") 'end-of-line)
 (global-set-key (kbd "C-l") 'goto-line)
+(global-set-key (kbd "C-x C-x") 'exchange-point-and-mark)
 
 (global-set-key (kbd "C-x C-d") 'split-window-right)
 (global-set-key (kbd "C-x C-s") 'split-window-below)
@@ -32,11 +34,19 @@
 (global-set-key (kbd "C-c d") 'crux-duplicate-current-line-or-region)
 (global-set-key (kbd "C-c M-d") 'crux-duplicate-and-comment-current-line-or-region)
 (global-set-key (kbd "C-c c") 'comment-or-uncomment-region)
+(global-set-key (kbd "C-x e") 'edit-indirect)
+(global-set-key (kbd "C-\"") 'er/expand-region)
+(global-set-key (kbd "C-3") 'er/contract-region)
+
+(global-set-key (kbd "C-à") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-ç") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-)") 'mc/mark-all-like-this)
 
 (global-set-key (kbd "C-<return>") 'crux-smart-open-line)
 (global-set-key (kbd "C-S-<return>") 'crux-smart-open-line-above)
 (global-set-key (kbd "C-S-w") 'kill-region)
 (global-set-key (kbd "C-w") 'kill-whole-line)
+(global-set-key (kbd "C-M-c") 'kill-ring-save)
 (global-set-key (kbd "C-v") 'yank)
 (global-set-key (kbd "C-f") 'hs-toggle-hiding) ;; Fold code blocks
 

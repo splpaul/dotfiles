@@ -253,7 +253,7 @@
  '(mpc-songs-format "%-5{Time} %25{Title} %20{Album} %20{Artist}")
  '(objed-cursor-color "#F28FAD")
  '(package-selected-packages
-   '(all-the-icons-dired merlin-company utop rainbow-mode kaolin-themes crux drag-stuff vterm merlin tuareg dashboard exwm pair-tree autothemer haskell-mode emms dap-java god-mode helm-company speed-type vimish-fold lsp-javacomp lsp-java perspective doom-themes which-key use-package))
+   '(multiple-cursors expand-region edit-indirect all-the-icons-dired merlin-company utop rainbow-mode kaolin-themes crux drag-stuff vterm merlin tuareg dashboard exwm pair-tree autothemer haskell-mode emms dap-java god-mode helm-company speed-type vimish-fold lsp-javacomp lsp-java perspective doom-themes which-key use-package))
  '(pdf-view-midnight-colors (cons "#EEFFFF" "#1B1B29"))
  '(rustic-ansi-faces
    ["#1B1B29" "#F28FAD" "#ABE9B3" "#FAE3B0" "#89DCEB" "#DDB6F2" "#C9CBFF" "#EEFFFF"])
