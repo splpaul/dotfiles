@@ -1,76 +1,118 @@
 ;;; keybindings.el --- My personnal keybindings for emacs
+
 ;;; Commentary:
-;; TODO : Switch to general.el or some other keybind manager/helper
-;; TODO : Reorganize ?
+"Using multistate to define different keymap states"
 
 ;;; Code:
-(define-prefix-command 'ring-map)
-(global-set-key (kbd "C-x") 'ring-map)
-(global-set-key (kbd "C-c") 'ring-map)
+(multistate-define-state
+ 'normal
+ :lighter "N"
+ :default t)
 
-(global-set-key (kbd "C-z") 'previous-line)
-(global-set-key (kbd "C-q") 'backward-word)
-(global-set-key (kbd "C-s") 'next-line)
-(global-set-key (kbd "C-d") 'forward-word)
-(global-set-key (kbd "C-M-d") 'forward-sexp)
-(global-set-key (kbd "C-M-q") 'backward-sexp)
-(global-set-key (kbd "C-a") 'beginning-of-line)
-(global-set-key (kbd "C-e") 'end-of-line)
-(global-set-key (kbd "C-l") 'goto-line)
-(global-set-key (kbd "C-x C-x") 'exchange-point-and-mark)
+(multistate-define-state
+ 'editing
+ :lighter "E"
+ )
 
-(global-set-key (kbd "C-x C-d") 'split-window-right)
-(global-set-key (kbd "C-x C-s") 'split-window-below)
-(global-set-key (kbd "C-x C-w") 'delete-window)
-;; Resize windows
-(global-set-key (kbd "C-x C-z") 'enlarge-window-horizontally)
-(global-set-key (kbd "C-x C-q") 'shrink-window-horizontally)
-(global-set-key (kbd "C-x C-e") 'enlarge-window)
-;; Navigate windows
-(global-set-key (kbd "C-r") 'other-window)
+(multistate-define-state
+ 'visual
+ :lighter "V"
+ )
 
-(global-set-key (kbd "C-c l") 'display-line-numbers-mode)
+;; (multistate-global-mode 1)
+(add-hook 'prog-mode-hook 'multistate-mode)
+(add-hook 'dashboard-mode-hook 'multistate-mode)
+;; (add-hook 'dired-mode-hook 'multistate-mode)
 
-(global-set-key (kbd "C-c d") 'crux-duplicate-current-line-or-region)
-(global-set-key (kbd "C-c M-d") 'crux-duplicate-and-comment-current-line-or-region)
-(global-set-key (kbd "C-c c") 'comment-or-uncomment-region)
-(global-set-key (kbd "C-x e") 'edit-indirect)
-(global-set-key (kbd "C-\"") 'er/expand-region)
-(global-set-key (kbd "C-3") 'er/contract-region)
+(defkey multistate-normal-state-map
+  ;; Switch state
+  "<print>" 'multistate-editing-state
+  "v" 'multistate-visual-state
+  ;;
+  "S" 'save-buffer
+  ;; Text
+  "z" 'previous-line
+  "s" 'next-line
+  "d" 'forward-char
+  "q" 'backward-char
+  "C-q" 'backward-word
+  "C-d" 'forward-word
+  "C-a" 'beginning-of-line
+  "C-e" 'end-of-line
+  "C-x C-x" 'exchange-point-and-mark
+  ;; Windows
+  "x d" 'split-window-right
+  "x s" 'split-window-below
+  "x w" 'delete-window
+  "x h e" 'enlarge-window-horizontally
+  "x h s" 'shrink-window-horizontally
+  "x e" 'enlarge-window
+  "x r" 'other-window
+  ;; Dired
+  "x f" 'dired
+  "x g" 'dired-jump
+  ;; Killing
+  "k l" 'kill-whole-line
+  "k r" 'kill-region
+  "k b" 'kill-current-buffer
+  "k d" 'kill-dired-buffers
+  "k o" 'delete-other-windows
+  ;; Editing
+  "C" 'kill-ring-save
+  "y" 'yank
+  "S-<return>" 'crux-smart-open-line
+  "C-S-<return>" 'crux-smart-open-line-above
+  "D D" 'crux-duplicate-current-line-or-region
+  "D c" 'crux-duplicate-and-comment-current-line-or-region
+  "," 'comment-or-uncomment-region
+  ;; Line
+  "l l" 'goto-line
+  "l d" 'display-line-numbers-mode
+  ;; Eval code
+  "e r" 'eval-region
+  "e b" 'eval-buffer
+  "e R" 'crux-eval-and-replace
+  ;; Project/Programming tools
+  "c f" 'hs-toggle-hiding
+  "c j" 'meghanada-jump-declaration
+  "c s" 'isearch-forward
+  ;;
+  "M-<return>" 'vterm
+  "C-<delete>" 'sp-delete-word
+  "b s" 'switch-to-buffer
+  "b k" 'kill-buffer)
 
-(global-set-key (kbd "C-à") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-ç") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-)") 'mc/mark-all-like-this)
+(defkey multistate-editing-state-map
+  ;; Switch state
+  "<print>" 'multistate-normal-state)
 
-(global-set-key (kbd "C-<return>") 'crux-smart-open-line)
-(global-set-key (kbd "C-S-<return>") 'crux-smart-open-line-above)
-(global-set-key (kbd "C-S-w") 'kill-region)
-(global-set-key (kbd "C-w") 'kill-whole-line)
-(global-set-key (kbd "C-M-c") 'kill-ring-save)
-(global-set-key (kbd "C-v") 'yank)
-(global-set-key (kbd "C-f") 'hs-toggle-hiding) ;; Fold code blocks
+(defkey multistate-visual-state-map
+  ;; Switch state
+  "<print>" 'multistate-normal-state
+  ;; Modify region
+  "rc" 'er/contract-region
+  "re" 'er/expand-region
+  ;; Multiple cursors mode
+  "A" 'mc/mark-all-like-this
+  "n" 'mc/mark-next-like-this
+  "p " 'mc/mark-previous-like-this)
 
-(global-set-key (kbd "C-c j") 'meghanada-jump-declaration)
-(global-set-key (kbd "C-c s") 'isearch-forward)
-(global-set-key (kbd "C-x s") 'save-buffer)
-(global-set-key (kbd "C-c C-e") 'eval-buffer)
-(global-set-key (kbd "C-M-w") 'kill-current-buffer)
-
-(require 'vterm)
-(global-set-key (kbd "C-M-<return>") 'vterm)
-(define-key vterm-mode-map (kbd "C-r") 'other-window)
-(define-key vterm-mode-map (kbd "C-<deletechar>") 'sp-delete-word)
-(define-key vterm-mode-map (kbd "C-b") 'persp-switch-to-buffer)
-(define-key vterm-mode-map (kbd "C-M-w") 'kill-current-buffer)
-
-(global-set-key (kbd "C-b") 'persp-switch-to-buffer)
-(global-set-key (kbd "M-b") 'persp-remove-buffer)
-(global-set-key (kbd "C-²") 'centaur-tabs-forward)
+(global-set-key (kbd "C-<tab>") 'centaur-tabs-forward)
+(global-set-key (kbd "M-<tab>") 'centaur-tabs-forward-group)
+(global-set-key (kbd "C-c C-s") 'scrot-take-screenshot)
 
 (require 'lsp-java)
 (define-key java-mode-map (kbd "C-c C-t") 'compile-and-run-test-java)
-(define-key java-mode-map (kbd "C-d") 'forward-word)
-(define-key java-mode-map (kbd "C-c c") 'comment-or-uncomment-region)
+(require 'caml)
+(define-key caml-mode-map (kbd "C-c C-e") 'tuareg-run-ocaml)
+(require 'utop)
+(define-key utop-mode-map (kbd "C-z") 'utop-history-goto-prev)
+(define-key utop-mode-map (kbd "C-s") 'utop-history-goto-next)
+
+;; (define-prefix-command 'ring-map)
+;; (global-set-key (kbd "C-x") 'ring-map)
+;; (global-unset-key (kbd "C-c"))
+;; (global-set-key (kbd "C-c") 'ring-map)
 
 (provide 'keybindings)
 ;;; keybindings.el ends here

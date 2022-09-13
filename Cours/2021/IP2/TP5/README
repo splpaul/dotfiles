@@ -1,0 +1,3 @@
+Réponses aux questions 1 & 2 :
+1/ Une liste vide est déclarée en initialisant la premiere cellule a null
+2/ Cette définition n'est pas absurde, c'est la nature récursive des listes chainées. Chaque cellule contient un lien vers la prochaine cellule

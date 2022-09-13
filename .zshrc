@@ -3,9 +3,11 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH:$HOME/dotnet:$HOME/Programs:$HOME/.local/bin:$HOME/.cabal/bin
-export JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk/jre
+export JAVA_HOME="/usr/lib64/openjdk-11"
 
 export ZSH="/home/paul/.oh-my-zsh"
+
+LANG="en_US.utf8"
 
 (cat ~/.cache/wal/sequences &)
 
@@ -19,11 +21,15 @@ source $ZSH/oh-my-zsh.sh
 
 ### ALIASES ###
 
+alias java="/usr/lib64/openjdk-11/bin/java"
+alias javac="/usr/lib64/openjdk-11/bin/javac"
+
 #general
 
+alias news="sudo eselect news"
 alias gccw="gcc -Wall -Wextra -Werror -O3"
 
-alias cat="bat" # bat is a better cat
+#alias cat="bat" # bat is a better cat
 alias ls="lsd" # exa is a better ls
 alias ll="lsd -l"
 alias la="lsd -a"
@@ -91,7 +97,6 @@ fi
 
 export PATH="$HOME/.emacs.d/bin:$PATH"
 if [ -e /home/paul/.nix-profile/etc/profile.d/nix.sh ]; then . /home/paul/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
-. "/home/paul/.cargo/env"
 
 # opam configuration
 [[ ! -r /home/paul/.opam/opam-init/init.zsh ]] || source /home/paul/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null

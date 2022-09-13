@@ -1,0 +1,45 @@
+public class Arbre {
+    private Noeud sommet;
+
+    public Arbre(Noeud s) {
+        sommet = s;
+    }
+
+    public Arbre() {
+        sommet = null;
+    }
+
+    public Arbre(Arbre a) {
+        sommet = a.sommet.copie();
+    }
+
+    public void afficheInfixe() {
+        if (sommet == null) System.out.println("Arbre vide.");
+        else sommet.afficheInfixe();
+    }
+
+    public void afficheSuffixe() {
+        if (sommet == null) System.out.println("Arbre vide.");
+        else sommet.afficheSuffixe();
+    }
+
+    public void affichePrefixe() {
+        if (sommet == null) System.out.println("Arbre vide.");
+        else sommet.affichePrefixe();
+    }
+
+    public int nbNoeuds() {
+        if (sommet == null) return 0;
+        else return sommet.nbNoeuds();
+    }
+
+    public int somme() {
+        if (sommet == null) return 0;
+        else return sommet.somme();
+    }
+
+    public int profondeur() {
+        if (sommet == null) return 0;
+        else return sommet.profondeur();
+    }
+}

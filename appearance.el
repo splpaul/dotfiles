@@ -38,8 +38,11 @@
   (doom-modeline-github t)
   (doom-modeline-minor-modes t)
   (doom-modeline-persp-name t)
+  (doom-modeline-modal-icon t)
   (doom-modeline-buffer-file-name-style 'truncate-except-project)
   (doom-modeline-major-mode-icon t))
+
+(doom-modeline-def-segment "State")
 
 ;; Fancy ligatures
 (load-file "~/.emacs.d/elpa/ligature/ligature.el")

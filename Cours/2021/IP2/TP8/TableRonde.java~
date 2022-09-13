@@ -1,0 +1,16 @@
+class TableRonde {
+    private CellRob courant;
+
+    public TableRonde(Robot rob) {
+        courant = new CellRob(rob, null, null);
+    }
+
+    void affiche() {
+        courant.affiche();
+    }
+
+    public void ajouteRobot(Robot r) {
+        if (courant.getSuivant() == null) courant.setSuivant(new CellRob(r, courant, courant));
+        else courant.ajouteRobot(r);
+    }
+}

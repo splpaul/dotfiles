@@ -1,0 +1,66 @@
+class Automate {
+    private Cellule premiere;
+    private Cellule derniere;
+
+    public Automate() {
+        premiere = null;
+        derniere = null;
+    }
+
+    public Automate(String str) {
+        new Automate();
+        for (int i = 0; i < str.length(); i++) {
+            addLast(charToBool(str.charAt(i)));
+        }
+    }
+
+    public void add(boolean b) {
+        if (premiere == null) {
+            premiere = new Cellule(b);
+            derniere = premiere;
+        }
+        else {
+            Cellule temp = premiere;
+            premiere = new Cellule(b, temp, null);
+        }
+    }
+
+    public void addLast(boolean b) {
+        if (premiere == null) {
+            premiere = new Cellule(b);
+            derniere = premiere;
+        }
+        else {
+            derniere = derniere.addLast(b);
+        }
+    }
+
+    public void affiche() {
+        if (premiere == null) return;
+        else premiere.affiche();
+    }
+
+    public boolean charToBool(char c) {
+        if (c == '-') return true;
+        else return false;
+    }
+
+    public void prochainEtat() {
+        if (premiere != null) premiere.prochainEtat();
+    }
+
+    public void miseAJour() {
+        if (premiere != null) premiere.miseAJour();
+    }
+
+    public void uneEtape() {
+        prochainEtat();
+        miseAJour();
+    }
+
+    public void nEtapes(int n) {
+        for (int i = 0; i < n; i++) {
+            uneEtape();
+        }
+    }
+}

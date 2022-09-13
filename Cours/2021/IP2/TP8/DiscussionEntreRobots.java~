@@ -1,0 +1,11 @@
+class DiscussionEntreRobots {
+    public static void discussionEntreRob(TableRonde table) {
+        CellRob temp = table.getCourant();
+        while (temp != null) {
+            Robot rob = temp.getRobot();
+            if (rob.finiDeParler()) table.supprimer(rob.id);
+            else rob.parle(5);
+            temp = table.getCourant();
+        }
+    }
+}

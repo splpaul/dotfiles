@@ -1,0 +1,37 @@
+class CellRob {
+    private Robot robot;
+    private CellRob suivant;
+    private CellRob precedent;
+
+    public CellRob getSuivant() { return suivant; }
+
+    public void setSuivant(CellRob c) { suivant = c; }
+
+    public CellRob(Robot rob, CellRob suiv , CellRob prec) {
+        robot = rob;
+        suivant = suiv;
+        precedent = prec;
+    }
+
+    public void affiche() {
+        if (suivant == null) System.out.println(robot.description());
+        else {
+            CellRob stop = this;
+            CellRob temp = this;
+            while (temp.suivant != stop) {
+                System.out.println(temp.robot.description());
+                temp = temp.suivant;
+            }
+        }
+    }
+
+    public void ajouteRobot(Robot r) {
+        CellRob first = this;
+        CellRob temp = this;
+        while (temp.suivant != null) {
+            temp = temp.suivant;
+        }
+        temp.suivant = new CellRob(r, temp, first);
+        first.precedent = temp.suivant;
+    }
+}

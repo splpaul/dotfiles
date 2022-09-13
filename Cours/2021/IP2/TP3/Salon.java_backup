@@ -1,0 +1,78 @@
+class Salon {
+    private int nbUtilisateurs = 0;
+    private int nbMessages = 0;
+    private Utilisateur[] utilisateurs = new Utilisateur[1];
+    private Message[] messages;
+
+    public Salon(Utilisateur fondateur) {
+        nbUtilisateurs = 1;
+        utilisateurs[0] = fondateur;
+    }
+
+    public boolean estPresent(Utilisateur u) {
+        for (int i = 0; i < utilisateurs.length; i++) {
+            if (utilisateurs[i] == u)
+                return true;
+        }
+        return false;
+    }
+
+    public void ajouterUtilisateur(Utilisateur u) {
+        if (!estPresent(u)) {
+            Utilisateur[] temp = new Utilisateur[nbUtilisateurs + 1];
+            for (int i = 0; i < nbUtilisateurs; i++) {
+                temp[i] = utilisateurs[i];
+            }
+            temp[nbUtilisateurs] = u;
+            nbUtilisateurs++;
+            utilisateurs = temp;
+          }
+        else {
+            System.out.println("Utilisateur déjà présent.");
+        }
+    }
+
+    public void ajouterMessage(Message msg) {
+        if (estPresent(msg.getAuteur())) {
+            Message[] temp = new Message[nbMessages + 1];
+            for (int i = 0; i < nbMessages; i++) {
+                temp[i] = messages[i];
+            }
+            temp[nbMessages] = msg;
+            nbMessages++;
+            messages = temp;
+        }
+        else {
+            System.out.println("L'utilisateur n'est pas présent dans le salon");
+        }
+    }
+
+    public void afficher() {
+        for (Message msg: messages) {
+            System.out.println(msg.prettyPrint());
+        }
+    }
+
+    public void exclure(Utilisateur u) {
+        if (!estPresent(u)) {
+            return;
+        }
+        int count = 0;
+        int index = 0;
+        for (Message msg : messages) {
+            if (msg.getAuteur() == u) {
+                count++;
+            }
+        }
+        Message[] temp = new Message[nbMessages - count];
+        for (int i = 0; i < nbMessages; i++) {
+            if (messages[i].getAuteur() != u) {
+                temp[index] = messages[i];
+                index++;
+            }
+        }
+        messages = temp;
+        nbMessages -= count;
+        nbUtilisateurs--;
+    }
+}
