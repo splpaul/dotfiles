@@ -59,9 +59,9 @@ myFont = "xft:Hack Nerd Font Mono:regular:size=11"
 myBorderWidth = 1
 
 myTerminal = "alacritty"
-myBrowser = "chromium"
--- myLauncher = "dmenu_run -fn 'Hack Nerd Font Mono' -nb '#292d3e' -nf '#cccccc' -sb '#c792ea'"
-myLauncher = "rofi -show drun"
+myBrowser = "firefox"
+myLauncher = "dmenu_run -fn 'Hack Nerd Font Mono' -nb '#292d3e' -nf '#cccccc' -sb '#c792ea'"
+-- myLauncher = "rofi -show drun"
 
 myModMask = mod4Mask
 
@@ -89,9 +89,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch dmenu
     , ((modm,               xK_d     ), spawn myLauncher)
 
-    , ((modm .|. shiftMask, xK_c    ), spawn "chromium")
+    -- , ((modm .|. shiftMask, xK_c    ), spawn "chromium")
 
-    , ((modm,               xK_f    ), spawn "rofi -show filebrowser")
+    , ((modm,               xK_f    ), spawn "firefox")
 
     , ((modm .|. shiftMask, xK_d    ), spawn "discord")
 
