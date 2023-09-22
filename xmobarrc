@@ -71,13 +71,16 @@ Config {
                              ] 10
 
         -- Time and date indicator 
-        , Run Date           "%A%e %B %H:%M " "date" 20
+        , Run Date           "%A %e %B %H:%M " "date" 20
 
         -- Get kernel name
         , Run Com "uname" ["-r"] "" 0
 
+        -- Weather monitor
+        , Run Com "Weather" [] "LFPG" 3600
+
         -- Get current volume
-        , Run Com "/home/paul/volume" [] "volume" 15
+        , Run Com "/home/Paul/volume" [] "volume" 15
 
         , Run XMonadLog       
         ]
