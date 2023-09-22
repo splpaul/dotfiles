@@ -35,10 +35,10 @@
 (setq meghanada-maven-path "mvn")
 
 (setq lsp-java-configuration-runtimes '[(:name "openjdk11"
-                                               :path "/usr/lib64/openjdk-11")])
+                                               ;; :path "/usr/lib64/openjdk-11")])
                                                ;; :path "/usr/lib/jvm/openjdk-11")])
-(setq lsp-java-java-path "/usr/lib64/openjdk-11/bin/java")
-(setq meghanada-java-path "/usr/lib64/openjdk-11/bin/java")
+;; (setq lsp-java-java-path "/usr/lib64/openjdk-11/bin/java")
+;; (setq meghanada-java-path "/usr/lib64/openjdk-11/bin/java")
 
 ;; Ocaml stuff
 (require 'merlin)
