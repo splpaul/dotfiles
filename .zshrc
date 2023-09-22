@@ -3,7 +3,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH:$HOME/dotnet:$HOME/Programs:$HOME/.local/bin:$HOME/.cabal/bin
-export JAVA_HOME="/usr/lib64/openjdk-11"
+# export JAVA_HOME="/usr/lib64/openjdk-11"
 
 export ZSH="/home/paul/.oh-my-zsh"
 
@@ -21,8 +21,8 @@ source $ZSH/oh-my-zsh.sh
 
 ### ALIASES ###
 
-alias java="/usr/lib64/openjdk-11/bin/java"
-alias javac="/usr/lib64/openjdk-11/bin/javac"
+#alias java="/usr/lib64/openjdk-11/bin/java"
+#alias javac="/usr/lib64/openjdk-11/bin/javac"
 
 #general
 
@@ -36,12 +36,12 @@ alias la="lsd -a"
 
 alias ..="cd .."
 
-alias install="sudo xbps-install"
-alias remove="sudo xbps-remove -R"
-alias query="xbps-query"
-alias queryR="xbps-query -Rs"
+#alias install="sudo xbps-install"
+#alias remove="sudo xbps-remove -R"
+#alias query="xbps-query"
+#alias queryR="xbps-query -Rs"
 
-alias xmonad="/home/paul/.local/bin/./xmonad"
+#alias xmonad="/home/paul/.local/bin/./xmonad"
 
 alias uplimg='curl -F"file=@$(find $HOME -type f | dmenu -l 15)" 0x0.st | xclip -sel c'
 
@@ -96,7 +96,7 @@ fi
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 export PATH="$HOME/.emacs.d/bin:$PATH"
-if [ -e /home/paul/.nix-profile/etc/profile.d/nix.sh ]; then . /home/paul/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+#if [ -e /home/paul/.nix-profile/etc/profile.d/nix.sh ]; then . /home/paul/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 
 # opam configuration
 [[ ! -r /home/paul/.opam/opam-init/init.zsh ]] || source /home/paul/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
